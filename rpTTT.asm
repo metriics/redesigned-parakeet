@@ -1,8 +1,14 @@
+## TODO:
+# make it so you can't place your symbol on top of another symbol
+# fix weird duplication of symbol on placement issue
+# implement vicotry checking
+
 # Written by:
 # Steph Gagnon  - 100694227
 # Jonah Griffin - 100702748
+
 .data # put stuff we need in here
-currentPlayer: .asciiz "X"
+currentPlayer: .asciiz "X" 	# start currentPlayer as X.
 xStr: .asciiz "X"
 oStr: .asciiz "O"
 input: .word 1
@@ -97,8 +103,17 @@ checkVictor:
 	beq $t1, 2, owin	 # if $t1 = 2, o wins, branch to owin
 	beq $t1, 3, draw 	 # if $t1 = 3, draw, branch to draw
 	
-	# if no win condition, continue jump back to while
-	j while
+	# switch current player
+	la $a0, currentPlayer 	# get address of currentPlayer and store it in $a0
+	lb $t3, ($a0)			# get contents at address $a0 and store in $t3
+	
+	la $a1, oStr			# get address of oStr and store in $a1
+	lb $t4, ($a1)			# get contents at address $a1 and store in $t4
+	beq $t3, $t4, setX  	# if $t3 == $t4, branch to setX
+	
+	la $a1, xStr			# get address of xStr and store in $a1
+	lb $t4, ($a1)			# get contents at address $a1 and store in $t4
+	beq $t3, $t4, setO		# if $t3 == $t4, branch to setO
 
 up1:
 la $a0, slot1				# get address of slot1 and store it in $a0
@@ -145,6 +160,18 @@ la $a0, slot9				# get address of slot9 and store it in $a0
 lw $a1, currentPlayer 		# set $a1 to current player char
 sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
 j checkVictor
+
+setO:
+la $a0, currentPlayer
+lw $a1, oStr
+sw $a1, 0($a0)
+j while
+
+setX:
+la $a0, currentPlayer
+lw $a1, xStr
+sw $a1, 0($a0)
+j while
 
 xwin:
 li $v0, 4			# tell system to print string
