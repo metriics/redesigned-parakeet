@@ -1,6 +1,5 @@
 ## TODO:
 # make it so you can't place your symbol on top of another symbol
-# fix weird duplication of symbol on placement issue
 # implement vicotry checking
 
 # Written by:
@@ -12,6 +11,7 @@ currentPlayer: .asciiz "X" 	# start currentPlayer as X.
 xStr: .asciiz "X"
 oStr: .asciiz "O"
 input: .word 1
+emptySlot: .asciiz "."
 slot1: .asciiz "."
 slot2: .asciiz "."
 slot3: .asciiz "."
@@ -27,6 +27,7 @@ turnMsg2: .asciiz "'s turn.\n"
 xwinMsg: .asciiz "X wins, congratulations!"
 owinMsg: .asciiz "O wins, congratulations!"
 drawMsg: .asciiz "It's a draw!"
+NAmsg: .asciiz "That slot is not available, try again.\n"
 
 .text # main program
 while:
@@ -116,61 +117,105 @@ checkVictor:
 	beq $t3, $t4, setO		# if $t3 == $t4, branch to setO
 
 up1:
-la $a0, slot1				# get address of slot1 and store it in $a0
-lw $a1, currentPlayer 		# set $a1 to current player char
-sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
+lb $t2, emptySlot			# get contents of emptySlot
+lb $t1, slot1				# get contents of slot
+la $a0, slot1				# get address of slot and store it in $a0
+lb $a1, currentPlayer 			# set $a1 to current player char
+bne $t1, $t2, slotNA			# branch to slotNA if slot is not available
+
+sb $a1, 0($a0)				# set address stored in $a0 to contents of $a1
 j checkVictor				# check new board state to see if there is a victor
+
 up2:
-la $a0, slot2				# get address of slot2 and store it in $a0
-lw $a1, currentPlayer 		# set $a1 to current player char
-sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
-j checkVictor
+lb $t2, emptySlot			# get contents of emptySlot
+lb $t1, slot2				# get contents of slot
+la $a0, slot2				# get address of slot and store it in $a0
+lb $a1, currentPlayer 			# set $a1 to current player char
+bne $t1, $t2, slotNA			# branch to slotNA if slot is not available
+
+sb $a1, 0($a0)				# set address stored in $a0 to contents of $a1
+j checkVictor				# check new board state to see if there is a victor
+
 up3:
-la $a0, slot3				# get address of slot3 and store it in $a0
-lw $a1, currentPlayer 		# set $a1 to current player char
-sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
-j checkVictor
+lb $t2, emptySlot			# get contents of emptySlot
+lb $t1, slot3				# get contents of slot
+la $a0, slot3				# get address of slot and store it in $a0
+lb $a1, currentPlayer 			# set $a1 to current player char
+bne $t1, $t2, slotNA			# branch to slotNA if slot is not available
+
+sb $a1, 0($a0)				# set address stored in $a0 to contents of $a1
+j checkVictor				# check new board state to see if there is a victor
+
 up4:
-la $a0, slot4				# get address of slot4 and store it in $a0
-lw $a1, currentPlayer 		# set $a1 to current player char
-sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
-j checkVictor
+lb $t2, emptySlot			# get contents of emptySlot
+lb $t1, slot4				# get contents of slot
+la $a0, slot4				# get address of slot and store it in $a0
+lb $a1, currentPlayer 			# set $a1 to current player char
+bne $t1, $t2, slotNA			# branch to slotNA if slot is not available
+
+sb $a1, 0($a0)				# set address stored in $a0 to contents of $a1
+j checkVictor				# check new board state to see if there is a victor
+
 up5:
-la $a0, slot5				# get address of slot5 and store it in $a0
-lw $a1, currentPlayer 		# set $a1 to current player char
-sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
-j checkVictor
+lb $t2, emptySlot			# get contents of emptySlot
+lb $t1, slot5				# get contents of slot
+la $a0, slot5				# get address of slot and store it in $a0
+lb $a1, currentPlayer 			# set $a1 to current player char
+bne $t1, $t2, slotNA			# branch to slotNA if slot is not available
+
+sb $a1, 0($a0)				# set address stored in $a0 to contents of $a1
+j checkVictor				# check new board state to see if there is a victor
+
 up6:
-la $a0, slot6				# get address of slot6 and store it in $a0
-lw $a1, currentPlayer 		# set $a1 to current player char
-sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
-j checkVictor
+lb $t2, emptySlot			# get contents of emptySlot
+lb $t1, slot6				# get contents of slot
+la $a0, slot6				# get address of slot and store it in $a0
+lb $a1, currentPlayer 			# set $a1 to current player char
+bne $t1, $t2, slotNA			# branch to slotNA if slot is not available
+
+sb $a1, 0($a0)				# set address stored in $a0 to contents of $a1
+j checkVictor				# check new board state to see if there is a victor
+
 up7:
-la $a0, slot7				# get address of slot7 and store it in $a0
-lw $a1, currentPlayer 		# set $a1 to current player char
-sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
-j checkVictor
+lb $t2, emptySlot			# get contents of emptySlot
+lb $t1, slot7				# get contents of slot
+la $a0, slot7				# get address of slot and store it in $a0
+lb $a1, currentPlayer 			# set $a1 to current player char
+bne $t1, $t2, slotNA			# branch to slotNA if slot is not available
+
+sb $a1, 0($a0)				# set address stored in $a0 to contents of $a1
+j checkVictor				# check new board state to see if there is a victor
+
 up8:
-la $a0, slot8				# get address of slot8 and store it in $a0
-lw $a1, currentPlayer 		# set $a1 to current player char
-sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
-j checkVictor
+lb $t2, emptySlot			# get contents of emptySlot
+lb $t1, slot8				# get contents of slot
+la $a0, slot8				# get address of slot and store it in $a0
+lb $a1, currentPlayer 			# set $a1 to current player char
+bne $t1, $t2, slotNA			# branch to slotNA if slot is not available
+
+sb $a1, 0($a0)				# set address stored in $a0 to contents of $a1
+j checkVictor				# check new board state to see if there is a victor
+
 up9:
-la $a0, slot9				# get address of slot9 and store it in $a0
-lw $a1, currentPlayer 		# set $a1 to current player char
-sw $a1, 0($a0)				# set address stored in $a0 to contents of $a1
-j checkVictor
+lb $t2, emptySlot			# get contents of emptySlot
+lb $t1, slot9				# get contents of slot
+la $a0, slot9				# get address of slot and store it in $a0
+lb $a1, currentPlayer 			# set $a1 to current player char
+bne $t1, $t2, slotNA			# branch to slotNA if slot is not available
+
+sb $a1, 0($a0)				# set address stored in $a0 to contents of $a1
+j checkVictor				# check new board state to see if there is a victor
 
 setO:
 la $a0, currentPlayer
-lw $a1, oStr
-sw $a1, 0($a0)
+lb $a1, oStr
+sb $a1, 0($a0)
 j while
 
 setX:
 la $a0, currentPlayer
-lw $a1, xStr
-sw $a1, 0($a0)
+lb $a1, xStr
+sb $a1, 0($a0)
 j while
 
 xwin:
@@ -196,3 +241,9 @@ syscall				# execute
 
 li $v0, 10 			# the end of the program, AKA exit
 syscall
+
+slotNA:
+li $v0, 4		# tell system to print string
+la $a0, NAmsg		# set argument register to string
+syscall	
+j while
