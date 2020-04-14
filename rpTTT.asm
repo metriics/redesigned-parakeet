@@ -22,12 +22,39 @@ slot9: .asciiz "."
 newLine: .asciiz "\n"
 turnMsg1: .asciiz "It is "
 turnMsg2: .asciiz "'s turn.\n"
-xwinMsg: .asciiz "X wins, congratulations!"
-owinMsg: .asciiz "O wins, congratulations!"
-drawMsg: .asciiz "It's a draw!"
+xwinMsg: .asciiz "X wins, congratulations!\n"
+owinMsg: .asciiz "O wins, congratulations!\n"
+drawMsg: .asciiz "It's a draw!\n"
 NAmsg: .asciiz "That slot is not available, try again.\n"
+Choosemsg: .asciiz "Pick X or O (Type 1 for X or 2 for O).\n"
+playAgainMsg: .asciiz "Do you want to play again? (Type 1 for yes or 2 for no).\n"
 
 .text # main program
+PickASide:
+	li $v0, 4				# tell system to print string
+	la $a0, Choosemsg		# set argument register to string
+	syscall					# execute
+	
+	# gets input for which character starts first
+	li $v0, 5   		# tell sys to read an integer
+	syscall				# execute
+	move $t0, $v0		# cope result input integer into $t0
+	
+	#sets first players character to x if 1
+	li $t1, 1
+	beq $t0, $t1, iWantX
+	
+	#sets first players character to o if 2
+	li $t1, 2
+	beq $t0, $t1, iWantO
+	
+	j PickASide
+	
+iWantX:
+	j setX
+iWantO:
+	j setO
+	
 while:
 	# print the board
 	li $v0, 4				# tell system to print string
@@ -423,21 +450,53 @@ li $v0, 4			# tell system to print string
 la $a0, xwinMsg		# set argument register to string
 syscall				# execute
 
-li $v0, 10 			# the end of the program, AKA exit
-syscall
+j Restart
 
 owin:
 li $v0, 4			# tell system to print string
 la $a0, owinMsg		# set argument register to string
 syscall				# execute
 
-li $v0, 10 			# the end of the program, AKA exit
-syscall
+j Restart
 
 draw:
 li $v0, 4			# tell system to print string
 la $a0, drawMsg		# set argument register to string
 syscall				# execute
+j Restart
 
+#Restart Check
+Restart:
+li $v0, 4				# tell system to print string
+la $a0, playAgainMsg		# set argument register to string
+syscall					# execute
+	
+# gets input for continue to play or not
+li $v0, 5   		# tell sys to read an integer
+syscall				# execute
+move $t0, $v0		# cope result input integer into $t0
+
+#resets game board
+lb $t3, emptySlot
+sb $t3, slot1
+sb $t3, slot2
+sb $t3, slot3
+sb $t3, slot4
+sb $t3, slot5
+sb $t3, slot6
+sb $t3, slot7
+sb $t3, slot8
+sb $t3, slot9
+
+#goes back to start if user wants to continue
+li $t1, 1
+beq $t0, $t1, PickASide
+
+#stops the program if user doesnt want to continue
+li $t1, 2
+beq $t0, $t1, StopProgram
+j Restart
+
+StopProgram:
 li $v0, 10 			# the end of the program, AKA exit
 syscall
